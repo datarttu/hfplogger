@@ -17,7 +17,6 @@ from hfp.parse import parse_message
 
 def on_connect(client, userdata, flags, rc):
     logging.info(f'Connected with result code {rc}')
-    # TODO
 
 def on_message(client, userdata, msg):
     res = parse_message(msg, include=userdata['include'])
