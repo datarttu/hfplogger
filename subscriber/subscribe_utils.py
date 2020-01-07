@@ -41,10 +41,9 @@ def autoname_path(directory, template, timestamp=None):
     fname = timestamp.strftime(template)
     return os.path.join(directory, fname)
 
-def random_clientid():
+def random_clientid(length=10):
     """
     Generate random string for client id.
     """
-    length = 10
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for i in range(length))
