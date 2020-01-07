@@ -42,7 +42,7 @@ def main():
                    f'CLIENTID={CLIENTID} '
                    f'SECONDS={SECONDS} '
                    f'LOGLVL={LOGLVL}'))
-    # TODO: generate random id
+
     client = mqtt.Client(CLIENTID)
     client.on_connect = on_connect
     client.on_message = on_message
