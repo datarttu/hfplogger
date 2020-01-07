@@ -37,6 +37,25 @@ def get_loglevel(level_str):
     else:
         return 40
 
+def prefix_by_topic(topic_str):
+    """
+    Return a topic-based prefix to produce distinct output files.
+
+    ``prefix`` and ``version``, the first two elements,
+    are ignored as they are always the same.
+    ``journey_type`` is only included if it is NOT ``journey``.
+    ``temporal_type`` is only included if it is NOT ``ongoing``.
+    Last element of the topic (practically ``#``) is left out.
+    See https://digitransit.fi/en/developers/apis/4-realtime-api/vehicle-positions/#the-topic
+    """
+    els = topic_str.split('/')[3:]
+    if els[0] == 'journey':
+        els[0] = None
+    if els[1] == 'ongoing':
+        els[1] = None
+    els = [el for el in els[:-1] if el is not None]
+    return '_'.join(els)
+
 def autoname_path(directory, template, timestamp=None):
     """
     Return filepath string like ``[path]/[template]``.

@@ -12,6 +12,7 @@ from datetime import datetime
 from hfp.utils import get_loglevel
 from hfp.utils import autoname_path
 from hfp.utils import random_clientid
+from hfp.utils import prefix_by_topic
 from hfp.utils import TOPIC_FIELDS
 from hfp.parse import parse_message
 
@@ -32,8 +33,9 @@ def main():
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
     STARTTIME = datetime.now()
 
+    prefix = prefix_by_topic(TOPIC)
     logpath = autoname_path(directory='data/logs',
-                            template='hfp_%Y%m%d-%H%M.log',
+                            template=f'{prefix}_%Y%m%d-%H%M.log',
                             timestamp=STARTTIME)
     logging.basicConfig(filename=logpath, level=LOGLVL)
     logging.getLogger().addHandler(logging.StreamHandler())
@@ -46,8 +48,7 @@ def main():
                    f'LOGLVL={LOGLVL}'))
 
     respath = autoname_path(directory='data/raw',
-                            # TODO: use topic parts in template
-                            template='hfp_%Y%m%d-%H%M.csv',
+                            template=f'{prefix}_%Y%m%d-%H%M.csv',
                             timestamp=STARTTIME)
     resfile_exists = os.path.isfile(respath)
 
