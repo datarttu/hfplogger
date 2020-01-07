@@ -8,6 +8,16 @@ import random
 import logging
 from datetime import datetime
 
+# List all possible topic fields as of 2020-1,
+# see https://digitransit.fi/en/developers/apis/4-realtime-api/vehicle-positions/#the-payload
+TOPIC_FIELDS = ['desi', 'dir', 'oper', 'veh', 'tst', 'tsi', 'spd', 'hdg',
+                'lat', 'long', 'acc', 'dl', 'odo', 'drst', 'oday', 'jrn',
+                'line', 'start', 'loc', 'stop', 'route', 'occu', 'seq',
+                'ttarr', 'ttdep', 'dr-type', 'tlp-requestid', 'tlp-requesttype',
+                'tlp-prioritylevel', 'tlp-reason', 'tlp-att-seq', 'tlp-decision',
+                'sid', 'signal-groupid', 'tlp-signalgroupnbr', 'tlp-line-configid',
+                'tlp-point-configid', 'tlp-frequency', 'tlp-protocol']
+
 def get_loglevel(level_str):
     """
     Get logging level from string.
