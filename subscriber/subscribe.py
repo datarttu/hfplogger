@@ -4,6 +4,7 @@ for given amount of seconds.
 """
 
 import os
+import csv
 import time
 import logging
 import paho.mqtt.client as mqtt
@@ -11,6 +12,7 @@ from datetime import datetime
 from hfp.utils import get_loglevel
 from hfp.utils import autoname_path
 from hfp.utils import random_clientid
+from hfp.utils import TOPIC_FIELDS
 from hfp.parse import parse_message
 
 def on_connect(client, userdata, flags, rc):
@@ -18,12 +20,8 @@ def on_connect(client, userdata, flags, rc):
     # TODO
 
 def on_message(client, userdata, msg):
-    #print(parse_message(msg, include=userdata['include']))
     res = parse_message(msg, include=userdata['include'])
-    #print(res)
-    userdata['file_conn'].write(str(res) + '\n')
-    # TODO:
-    # Save filtered messages to an open file
+    userdata['writer'].writerow(res)
 
 def main():
     HOST = os.getenv('HOST', 'mqtt.hsl.fi')
@@ -52,17 +50,22 @@ def main():
                             # TODO: use topic parts in template
                             template='hfp_%Y%m%d-%H%M.csv',
                             timestamp=STARTTIME)
+    resfile_exists = os.path.isfile(respath)
 
     # Opened output file and field filter set must be prepared
     # for the client already
-    fobj = open(respath, 'a')
     logging.info(f'Saving to {respath}')
     if FIELDS:
-        include = set(FIELDS.split(' '))
+        fields = FIELDS.split(' ')
     else:
-        include = {}
+        fields = TOPIC_FIELDS
+    fobj = open(respath, 'a')
+    writer = csv.DictWriter(fobj, fieldnames=fields, extrasaction='ignore')
+    if not resfile_exists:
+        writer.writeheader()
+
     client = mqtt.Client(client_id=CLIENTID,
-                         userdata={'file_conn': fobj, 'include': include})
+                         userdata={'writer': writer, 'include': fields})
     client.on_connect = on_connect
     client.on_message = on_message
 
