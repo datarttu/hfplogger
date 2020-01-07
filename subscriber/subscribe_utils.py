@@ -3,6 +3,8 @@ Functions for HFP MQTT subscriber.
 """
 
 import os
+import string
+import random
 import logging
 from datetime import datetime
 
@@ -38,3 +40,11 @@ def autoname_path(directory, template, timestamp=None):
     timestamp = timestamp or datetime.now()
     fname = timestamp.strftime(template)
     return os.path.join(directory, fname)
+
+def random_clientid():
+    """
+    Generate random string for client id.
+    """
+    length = 10
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choice(chars) for i in range(length))

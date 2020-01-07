@@ -10,6 +10,7 @@ import paho.mqtt.client as mqtt
 from datetime import datetime
 from subscribe_utils import get_loglevel
 from subscribe_utils import autoname_path
+from subscribe_utils import random_clientid
 
 def on_connect(client, userdata, flags, rc):
     logging.info(f'Connected with result code {rc}')
@@ -24,6 +25,7 @@ def main():
     HOST = os.getenv('HOST', 'mqtt.hsl.fi')
     PORT = int(os.getenv('PORT', 1883))
     TOPIC = os.getenv('TOPIC')
+    CLIENTID = os.getenv('CLIENTID', random_clientid())
     SECONDS = int(os.getenv('SECONDS', 5))
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
     STARTTIME = datetime.now()
@@ -37,10 +39,11 @@ def main():
     logging.debug((f'HOST={HOST} '
                    f'PORT={PORT} '
                    f'TOPIC={TOPIC} '
+                   f'CLIENTID={CLIENTID} '
                    f'SECONDS={SECONDS} '
                    f'LOGLVL={LOGLVL}'))
     # TODO: generate random id
-    client = mqtt.Client(client_id='testid1234')
+    client = mqtt.Client(CLIENTID)
     client.on_connect = on_connect
     client.on_message = on_message
 
