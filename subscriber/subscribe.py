@@ -18,7 +18,10 @@ def on_connect(client, userdata, flags, rc):
     # TODO
 
 def on_message(client, userdata, msg):
-    print(parse_message(msg, include=userdata['include']))
+    #print(parse_message(msg, include=userdata['include']))
+    res = parse_message(msg, include=userdata['include'])
+    #print(res)
+    userdata['file_conn'].write(str(res) + '\n')
     # TODO:
     # Save filtered messages to an open file
 
@@ -47,13 +50,13 @@ def main():
 
     # Opened output file and field filter set must be prepared
     # for the client already
-    # TODO: file object
+    fobj = open('foo.txt', 'w')
     if FIELDS:
         include = set(FIELDS.split(' '))
     else:
         include = {}
     client = mqtt.Client(client_id=CLIENTID,
-                         userdata={'file_conn': None, 'include': include})
+                         userdata={'file_conn': fobj, 'include': include})
     client.on_connect = on_connect
     client.on_message = on_message
 
@@ -68,6 +71,7 @@ def main():
         logging.exception()
     finally:
         client.disconnect()
+        fobj.close()
         logging.info(f'Ended at {datetime.now()}')
 
 if __name__ == "__main__":
