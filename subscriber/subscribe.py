@@ -31,7 +31,6 @@ def main():
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
     STARTTIME = datetime.now()
 
-    # TODO: logging FILE config as well
     logpath = autoname_path(directory='data/logs',
                             template='hfp_%Y%m%d-%H%M.log',
                             timestamp=STARTTIME)
