@@ -48,9 +48,15 @@ def main():
                    f'SECONDS={SECONDS} '
                    f'LOGLVL={LOGLVL}'))
 
+    respath = autoname_path(directory='data/raw',
+                            # TODO: use topic parts in template
+                            template='hfp_%Y%m%d-%H%M.csv',
+                            timestamp=STARTTIME)
+
     # Opened output file and field filter set must be prepared
     # for the client already
-    fobj = open('foo.txt', 'w')
+    fobj = open(respath, 'a')
+    logging.info(f'Saving to {respath}')
     if FIELDS:
         include = set(FIELDS.split(' '))
     else:
