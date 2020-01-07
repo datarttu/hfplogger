@@ -4,10 +4,6 @@ Parse raw HFP MQTT messages.
 
 import json
 
-# Assumed v2 event types as of 2020-1
-EVENT_TYPES = {'VP', 'DUE', 'ARR', 'DEP', 'ARS', 'PDE', 'PAS', 'WAIT', 'DOO',
-               'DOC', 'TLR', 'TLA', 'DA', 'DOUT', 'BA', 'BOUT', 'VJA', 'VJOUT'}
-
 def parse_message(msg, include={}):
     """
     Parse raw HFP message, flatten into a simple dict
