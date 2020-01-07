@@ -8,9 +8,9 @@ import time
 import logging
 import paho.mqtt.client as mqtt
 from datetime import datetime
-from subscribe_utils import get_loglevel
-from subscribe_utils import autoname_path
-from subscribe_utils import random_clientid
+from hfp.utils import get_loglevel
+from hfp.utils import autoname_path
+from hfp.utils import random_clientid
 
 def on_connect(client, userdata, flags, rc):
     logging.info(f'Connected with result code {rc}')
