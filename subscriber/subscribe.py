@@ -11,13 +11,14 @@ from datetime import datetime
 from hfp.utils import get_loglevel
 from hfp.utils import autoname_path
 from hfp.utils import random_clientid
+from hfp.parse import parse_message
 
 def on_connect(client, userdata, flags, rc):
     logging.info(f'Connected with result code {rc}')
     # TODO
 
 def on_message(client, userdata, msg):
-    print(msg.payload)
+    print(parse_message(msg)
     # TODO:
     # Save filtered messages to an open file
 
