@@ -18,7 +18,7 @@ def on_connect(client, userdata, flags, rc):
     # TODO
 
 def on_message(client, userdata, msg):
-    print(parse_message(msg)
+    print(parse_message(msg, include=userdata['include']))
     # TODO:
     # Save filtered messages to an open file
 
@@ -26,6 +26,7 @@ def main():
     HOST = os.getenv('HOST', 'mqtt.hsl.fi')
     PORT = int(os.getenv('PORT', 1883))
     TOPIC = os.getenv('TOPIC')
+    FIELDS = os.getenv('FIELDS')
     CLIENTID = os.getenv('CLIENTID', random_clientid())
     SECONDS = int(os.getenv('SECONDS', 5))
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
@@ -39,11 +40,20 @@ def main():
     logging.debug((f'HOST={HOST} '
                    f'PORT={PORT} '
                    f'TOPIC={TOPIC} '
+                   f'FIELDS={FIELDS} '
                    f'CLIENTID={CLIENTID} '
                    f'SECONDS={SECONDS} '
                    f'LOGLVL={LOGLVL}'))
 
-    client = mqtt.Client(CLIENTID)
+    # Opened output file and field filter set must be prepared
+    # for the client already
+    # TODO: file object
+    if FIELDS:
+        include = set(FIELDS.split(' '))
+    else:
+        include = {}
+    client = mqtt.Client(client_id=CLIENTID,
+                         userdata={'file_conn': None, 'include': include})
     client.on_connect = on_connect
     client.on_message = on_message
 
