@@ -22,9 +22,6 @@ def on_connect(client, userdata, flags, rc):
     if rc > 0:
         raise Exception(f'Connection refused with result code {rc}')
     logging.info(f'Connected with result code {rc}')
-    if not userdata['resfile_exists']:
-        logging.debug('Writing csv header line')
-        userdata['writer'].writeheader()
 
 def on_message(client, userdata, msg):
     res = parse_message(msg, include=userdata['include'])
@@ -66,17 +63,17 @@ def main():
                             timestamp=STARTTIME)
     resfile_exists = os.path.isfile(respath)
 
-    # Opened output file and field filter set must be prepared
-    # for the client already
-    logging.info(f'Saving to {respath}')
-    fobj = open(respath, 'a')
-    writer = csv.DictWriter(fobj, fieldnames=FIELDS, extrasaction='ignore')
+    # So that fobj can be referenced in the end even if the file object
+    # to close then was never created:
+    fobj = None
+
+    # userdata dict passes objects to the Client callbacks.
+    # We update it with the open file object only after a successful connection.
+    userdata = {'include': FIELDS,
+                'writer': None}
 
     client = mqtt.Client(client_id=CLIENTID,
-                         userdata={'writer': writer,
-                                   'include': FIELDS,
-                                   'resfile_exists': resfile_exists}
-                         )
+                         userdata=userdata)
     client.on_connect = on_connect
     client.on_message = on_message
 
@@ -84,22 +81,34 @@ def main():
         keepalive = 60
     else:
         keepalive = DURATION
-    client.connect(host=HOST, port=PORT, keepalive=keepalive)
-    client.subscribe(TOPIC)
+
     try:
+        logging.debug('Connecting')
+        client.connect(host=HOST, port=PORT, keepalive=keepalive)
+        client.subscribe(TOPIC)
+
+        logging.info(f'Saving csv to {respath}')
+        fobj = open(respath, 'a')
+        writer = csv.DictWriter(fobj, fieldnames=FIELDS, extrasaction='ignore')
+        if not resfile_exists:
+            logging.debug('Writing csv header line')
+            writer.writeheader()
+        userdata['writer'] = writer
+        client.user_data_set(userdata)
+
         client.loop_start()
         logging.info(f'Subscription start: {datetime.utcnow()} UTC')
         time.sleep(DURATION)
         client.loop_stop()
         logging.info(f'Subscription end: {datetime.utcnow()} UTC')
     except:
-        logging.exception('Error in subscription loop')
         logging.exception('Error in subscription')
     finally:
         client.disconnect()
         logging.info(f'Disconnected')
-        fobj.close()
         logging.info(f'{i} messages received')
+        if fobj is not None:
+            fobj.close()
 
 if __name__ == "__main__":
     main()
