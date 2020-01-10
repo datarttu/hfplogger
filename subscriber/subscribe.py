@@ -31,11 +31,11 @@ def main():
     CLIENTID = os.getenv('CLIENTID', random_clientid())
     SECONDS = int(os.getenv('SECONDS', 5))
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
-    STARTTIME = datetime.now()
+    STARTTIME = datetime.utcnow()
 
     prefix = prefix_by_topic(TOPIC)
     logpath = autoname_path(directory='data/logs',
-                            template=f'{prefix}_%Y%m%d-%H%M.log',
+                            template=f'{prefix}_%Y%m%dT%H%M%SZ.log',
                             timestamp=STARTTIME)
     logging.basicConfig(filename=logpath, level=LOGLVL)
     logging.getLogger().addHandler(logging.StreamHandler())
@@ -48,7 +48,7 @@ def main():
                    f'LOGLVL={LOGLVL}'))
 
     respath = autoname_path(directory='data/raw',
-                            template=f'{prefix}_%Y%m%d-%H%M.csv',
+                            template=f'{prefix}_%Y%m%dT%H%M%SZ.csv',
                             timestamp=STARTTIME)
     resfile_exists = os.path.isfile(respath)
 
@@ -73,7 +73,7 @@ def main():
     client.subscribe(TOPIC)
     try:
         client.loop_start()
-        logging.info(f'Started at {datetime.now()}')
+        logging.info(f'Started at {datetime.utcnow()} UTC')
         time.sleep(SECONDS)
         client.loop_stop()
     except:
@@ -81,7 +81,7 @@ def main():
     finally:
         client.disconnect()
         fobj.close()
-        logging.info(f'Ended at {datetime.now()}')
+        logging.info(f'Ended at {datetime.utcnow()} UTC')
 
 if __name__ == "__main__":
     main()

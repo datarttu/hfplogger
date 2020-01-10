@@ -66,7 +66,7 @@ def autoname_path(directory, template, timestamp=None):
     if not os.path.exists(directory):
         logging.debug(f'{directory} does not exist, creating')
         os.makedirs(directory)
-    timestamp = timestamp or datetime.now()
+    timestamp = timestamp or datetime.utcnow()
     fname = timestamp.strftime(template)
     return os.path.join(directory, fname)
 
