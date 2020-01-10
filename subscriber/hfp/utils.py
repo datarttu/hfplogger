@@ -44,19 +44,13 @@ def prefix_by_topic(topic_str):
     """
     Return a topic-based prefix to produce distinct output files.
 
-    ``prefix`` and ``version``, the first two elements,
-    are ignored as they are always the same.
-    ``journey_type`` is only included if it is NOT ``journey``.
-    ``temporal_type`` is only included if it is NOT ``ongoing``.
-    Last element of the topic (practically ``#``) is left out.
+    `+` in the topic is replaced with `ALL`.
+    The last element, `#` is left out from the prefix.
     See https://digitransit.fi/en/developers/apis/4-realtime-api/vehicle-positions/#the-topic
     """
-    els = topic_str.split('/')[3:]
-    if els[0] == 'journey':
-        els[0] = None
-    if els[1] == 'ongoing':
-        els[1] = None
+    els = topic_str.split('/')[1:]
     els = [el for el in els[:-1] if el is not None]
+    els = [el.replace('+', 'ALL') for el in els]
     return '_'.join(els)
 
 def autoname_path(directory, template, timestamp=None):
