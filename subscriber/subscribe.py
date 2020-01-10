@@ -50,7 +50,7 @@ def main():
                             timestamp=STARTTIME)
     logging.basicConfig(filename=logpath, level=LOGLVL)
     logging.getLogger().addHandler(logging.StreamHandler())
-    logging.debug((f'HOST={HOST} '
+    logging.info((f'HOST={HOST} '
                    f'PORT={PORT} '
                    f'TOPIC={TOPIC} '
                    f'FIELDS={FIELDS} '
@@ -102,7 +102,7 @@ def main():
         logging.exception('Error in subscription')
     finally:
         client.disconnect()
-        logging.info(f'Disconnected')
+        logging.debug(f'Disconnected')
         if fobj is not None:
             fobj.close()
         if i == 0:
