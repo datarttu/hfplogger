@@ -16,7 +16,7 @@ This is a tool for recording HFP v2 feed for later use.
 for a given amount of seconds.
 Run this e.g. every 15 minutes.
 
-**TODO: db-server** is a PostgreSQL database with [TimescaleDB](https://docs.timescale.com/latest/main) extension for storing certain aspects of the HFP data, such as vehicle position events, or traffic light priority events.
+**[db-server](db-server)** is a PostgreSQL database with [TimescaleDB](https://docs.timescale.com/latest/main) extension for storing certain aspects of the HFP data, such as vehicle position events, or traffic light priority events.
 It automatically deletes data older than given period of time (Timescale)
 Start this once, and keep available!
 
