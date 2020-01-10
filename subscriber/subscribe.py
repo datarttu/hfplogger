@@ -16,6 +16,8 @@ from hfp.utils import prefix_by_topic
 from hfp.utils import TOPIC_FIELDS
 from hfp.parse import parse_message
 
+i = 0
+
 def on_connect(client, userdata, flags, rc):
     if rc > 0:
         raise Exception(f'Connection refused with result code {rc}')
@@ -27,6 +29,8 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     res = parse_message(msg, include=userdata['include'])
     userdata['writer'].writerow(res)
+    global i
+    i += 1
 
 def main():
     HOST = os.getenv('HOST', 'mqtt.hsl.fi')
@@ -94,6 +98,7 @@ def main():
         client.disconnect()
         logging.info(f'Disconnected')
         fobj.close()
+        logging.info(f'{i} messages received')
 
 if __name__ == "__main__":
     main()
