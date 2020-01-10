@@ -120,8 +120,10 @@ def main():
         if fobj is not None:
             fobj.close()
         if i == 0:
-            logging.warning(f'{i} messages received. Removing {respath}.')
-            os.remove(respath)
+            logging.warning(f'{i} messages received.')
+            if os.path.isfile(respath):
+                logging.warning(f'Removing {respath}.')
+                os.remove(respath)
         else:
             logging.info(f'{i} messages received')
 
