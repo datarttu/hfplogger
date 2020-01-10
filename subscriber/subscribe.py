@@ -94,6 +94,7 @@ def main():
         logging.info(f'Subscription end: {datetime.utcnow()} UTC')
     except:
         logging.exception('Error in subscription loop')
+        logging.exception('Error in subscription')
     finally:
         client.disconnect()
         logging.info(f'Disconnected')
