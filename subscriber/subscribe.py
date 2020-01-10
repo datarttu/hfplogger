@@ -17,7 +17,12 @@ from hfp.utils import TOPIC_FIELDS
 from hfp.parse import parse_message
 
 def on_connect(client, userdata, flags, rc):
+    if rc > 0:
+        raise Exception(f'Connection refused with result code {rc}')
     logging.info(f'Connected with result code {rc}')
+    if not userdata['resfile_exists']:
+        logging.debug('Writing csv header line')
+        userdata['writer'].writeheader()
 
 def on_message(client, userdata, msg):
     res = parse_message(msg, include=userdata['include'])
@@ -62,11 +67,12 @@ def main():
     logging.info(f'Saving to {respath}')
     fobj = open(respath, 'a')
     writer = csv.DictWriter(fobj, fieldnames=FIELDS, extrasaction='ignore')
-    if not resfile_exists:
-        writer.writeheader()
 
     client = mqtt.Client(client_id=CLIENTID,
-                         userdata={'writer': writer, 'include': FIELDS})
+                         userdata={'writer': writer,
+                                   'include': FIELDS,
+                                   'resfile_exists': resfile_exists}
+                         )
     client.on_connect = on_connect
     client.on_message = on_message
 
