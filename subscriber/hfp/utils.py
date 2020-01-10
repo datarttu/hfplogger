@@ -24,7 +24,7 @@ TOPIC_FIELDS = ['desi', 'dir', 'oper', 'veh', 'tst', 'tsi', 'spd', 'hdg',
 def get_loglevel(level_str):
     """
     Get logging level from string.
-    Empty or incorrect values result in ``ERROR`` level.
+    Empty or incorrect values result in ``INFO`` level.
     """
     level_str = level_str.strip().lower()
     if level_str == 'notset':
@@ -38,7 +38,7 @@ def get_loglevel(level_str):
     elif level_str == 'critical':
         return 50
     else:
-        return 40
+        return 20
 
 def prefix_by_topic(topic_str):
     """

@@ -49,8 +49,8 @@ def main():
     FIELDS   = ar.fields or os.getenv('FIELDS')
     CLIENTID = ar.clientid or os.getenv('CLIENTID', random_clientid())
     DURATION = ar.duration or int(os.getenv('DURATION', 5))
-    LOGLVL   = get_loglevel(ar.loglvl or os.getenv('LOGLVL', 'ERROR'))
-    
+    LOGLVL   = get_loglevel(ar.loglvl or os.getenv('LOGLVL', 'INFO'))
+
     STARTTIME = datetime.utcnow()
 
     if FIELDS:
