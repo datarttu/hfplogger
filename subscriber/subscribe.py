@@ -33,6 +33,11 @@ def main():
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
     STARTTIME = datetime.utcnow()
 
+    if FIELDS:
+        FIELDS = FIELDS.split(' ')
+    else:
+        FIELDS = TOPIC_FIELDS
+
     prefix = prefix_by_topic(TOPIC)
     logpath = autoname_path(directory='data/logs',
                             template=f'{prefix}_%Y%m%dT%H%M%SZ.log',
@@ -55,17 +60,13 @@ def main():
     # Opened output file and field filter set must be prepared
     # for the client already
     logging.info(f'Saving to {respath}')
-    if FIELDS:
-        fields = FIELDS.split(' ')
-    else:
-        fields = TOPIC_FIELDS
     fobj = open(respath, 'a')
-    writer = csv.DictWriter(fobj, fieldnames=fields, extrasaction='ignore')
+    writer = csv.DictWriter(fobj, fieldnames=FIELDS, extrasaction='ignore')
     if not resfile_exists:
         writer.writeheader()
 
     client = mqtt.Client(client_id=CLIENTID,
-                         userdata={'writer': writer, 'include': fields})
+                         userdata={'writer': writer, 'include': FIELDS})
     client.on_connect = on_connect
     client.on_message = on_message
 
