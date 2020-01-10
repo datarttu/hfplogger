@@ -106,9 +106,13 @@ def main():
     finally:
         client.disconnect()
         logging.info(f'Disconnected')
-        logging.info(f'{i} messages received')
         if fobj is not None:
             fobj.close()
+        if i == 0:
+            logging.warning(f'{i} messages received. Removing {respath}.')
+            os.remove(respath)
+        else:
+            logging.info(f'{i} messages received')
 
 if __name__ == "__main__":
     main()
