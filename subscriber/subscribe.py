@@ -1,6 +1,6 @@
 """
 Save HFP MQTT messages of given topic
-for given amount of seconds.
+for given amount of DURATION.
 """
 
 import os
@@ -29,7 +29,7 @@ def main():
     TOPIC = os.getenv('TOPIC')
     FIELDS = os.getenv('FIELDS')
     CLIENTID = os.getenv('CLIENTID', random_clientid())
-    SECONDS = int(os.getenv('SECONDS', 5))
+    DURATION = int(os.getenv('DURATION', 5))
     LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
     STARTTIME = datetime.utcnow()
 
@@ -44,7 +44,7 @@ def main():
                    f'TOPIC={TOPIC} '
                    f'FIELDS={FIELDS} '
                    f'CLIENTID={CLIENTID} '
-                   f'SECONDS={SECONDS} '
+                   f'DURATION={DURATION} '
                    f'LOGLVL={LOGLVL}'))
 
     respath = autoname_path(directory='data/raw',
@@ -74,7 +74,7 @@ def main():
     try:
         client.loop_start()
         logging.info(f'Started at {datetime.utcnow()} UTC')
-        time.sleep(SECONDS)
+        time.sleep(DURATION)
         client.loop_stop()
     except:
         logging.exception()
