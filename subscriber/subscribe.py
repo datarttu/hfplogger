@@ -7,6 +7,7 @@ import os
 import csv
 import time
 import logging
+import argparse
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from hfp.utils import get_loglevel
@@ -30,13 +31,26 @@ def on_message(client, userdata, msg):
     i += 1
 
 def main():
-    HOST = os.getenv('HOST', 'mqtt.hsl.fi')
-    PORT = int(os.getenv('PORT', 1883))
-    TOPIC = os.getenv('TOPIC')
-    FIELDS = os.getenv('FIELDS')
-    CLIENTID = os.getenv('CLIENTID', random_clientid())
-    DURATION = int(os.getenv('DURATION', 5))
-    LOGLVL = get_loglevel(os.getenv('LOGLVL', 'ERROR'))
+    # Arguments are prioritized as follows:
+    # 1) CL arguments 2) env variables 3) default values.
+    parser = argparse.ArgumentParser(description='Subscribe to a HFP topic.')
+    parser.add_argument('--host', help='MQTT host address')
+    parser.add_argument('--port', help='MQTT port', type=int)
+    parser.add_argument('--topic', help='MQTT topic, starts with /hfp/v2/...')
+    parser.add_argument('--fields', help='Topic fields to include in result, separated by whitespace')
+    parser.add_argument('--clientid', help='MQTT client id to use instead of a random id')
+    parser.add_argument('--duration', help='Duration of subscription in seconds', type=int)
+    parser.add_argument('--loglvl', help='Logging level: debug, info, warning, or error')
+    ar = parser.parse_args()
+
+    HOST     = ar.host or os.getenv('HOST', 'mqtt.hsl.fi')
+    PORT     = ar.port or int(os.getenv('PORT', 1883))
+    TOPIC    = ar.topic or os.getenv('TOPIC')
+    FIELDS   = ar.fields or os.getenv('FIELDS')
+    CLIENTID = ar.clientid or os.getenv('CLIENTID', random_clientid())
+    DURATION = ar.duration or int(os.getenv('DURATION', 5))
+    LOGLVL   = get_loglevel(ar.loglvl or os.getenv('LOGLVL', 'ERROR'))
+    
     STARTTIME = datetime.utcnow()
 
     if FIELDS:
