@@ -70,19 +70,24 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(host=HOST, port=PORT)
+    if DURATION > 60:
+        keepalive = 60
+    else:
+        keepalive = DURATION
+    client.connect(host=HOST, port=PORT, keepalive=keepalive)
     client.subscribe(TOPIC)
     try:
         client.loop_start()
-        logging.info(f'Started at {datetime.utcnow()} UTC')
+        logging.info(f'Subscription start: {datetime.utcnow()} UTC')
         time.sleep(DURATION)
         client.loop_stop()
+        logging.info(f'Subscription end: {datetime.utcnow()} UTC')
     except:
-        logging.exception()
+        logging.exception('Error in subscription loop')
     finally:
         client.disconnect()
+        logging.info(f'Disconnected')
         fobj.close()
-        logging.info(f'Ended at {datetime.utcnow()} UTC')
 
 if __name__ == "__main__":
     main()
