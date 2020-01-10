@@ -61,7 +61,6 @@ def main():
     respath = autoname_path(directory='data/raw',
                             template=f'{prefix}_%Y%m%dT%H%M%SZ.csv',
                             timestamp=STARTTIME)
-    resfile_exists = os.path.isfile(respath)
 
     # So that fobj can be referenced in the end even if the file object
     # to close then was never created:
@@ -90,9 +89,7 @@ def main():
         logging.info(f'Saving csv to {respath}')
         fobj = open(respath, 'a')
         writer = csv.DictWriter(fobj, fieldnames=FIELDS, extrasaction='ignore')
-        if not resfile_exists:
-            logging.debug('Writing csv header line')
-            writer.writeheader()
+        writer.writeheader()
         userdata['writer'] = writer
         client.user_data_set(userdata)
 
