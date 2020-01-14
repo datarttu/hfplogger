@@ -23,6 +23,7 @@ Size of the directory on disk is reported too, before and after the deletions.
 Run this once a day for each directory you want.
 - **TODO:** *drop db chunks* removes database Timescale "chunks" (partitions) for timestamps older than `$1` days.
 Table sizes on disk are reported as well, before and after dropping the chunks.
+- **TODO:** system and network load monitoring
 
 ## Parameters / environment variables
 
