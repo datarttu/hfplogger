@@ -33,7 +33,7 @@ def on_message(client, userdata, msg):
 def main():
     # Arguments are prioritized as follows:
     # 1) CL arguments 2) env variables 3) default values.
-    parser = argparse.ArgumentParser(description='Subscribe to a HFP topic.')
+    parser = argparse.ArgumentParser(description='Subscribe to an HFP topic.')
     parser.add_argument('--host', help='MQTT host address')
     parser.add_argument('--port', help='MQTT port', type=int)
     parser.add_argument('--topic', help='MQTT topic, starts with /hfp/v2/...')
