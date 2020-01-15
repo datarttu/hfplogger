@@ -60,7 +60,7 @@ def main():
 
     prefix = prefix_by_topic(TOPIC)
     logpath = autoname_path(directory='data/logs',
-                            template=f'{prefix}_%Y%m%dT%H%M%SZ.log',
+                            template=f'{prefix}_%Y%m%d.log',
                             timestamp=STARTTIME)
     logging.basicConfig(filename=logpath, level=LOGLVL)
     logging.getLogger().addHandler(logging.StreamHandler())
