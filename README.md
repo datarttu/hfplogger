@@ -6,6 +6,8 @@ This is a tool for recording HFP v2 feed for later use.
 
 ## Usage
 
+**TODO:** set HFPV2_ROOTDIR, crontab installation, jobs.txt
+
 - *[db-server](db-server)* is a PostgreSQL database with [TimescaleDB](https://docs.timescale.com/latest/main) extension for storing certain aspects of the HFP data, such as vehicle position events, or traffic light priority events.
 Install PostgreSQL and TimescaleDB on the server and run SQL scripts in [db-server/init](db-server/init), or run the db-server in Docker.
   - **TODO:** DB schemata covering all types of HFP events.
@@ -34,6 +36,7 @@ Must be globally available for the user running the above processes:
 - **TODO:** OR just configure the user's `.pgpass`?
 - `HFPV2_ROOTDIR`: full path of the `hfplogger` project directory.
 `data/` as well as script locations are relative to this.
+- `HFPV2_CSV_KEEP_GZ`: set this to any value, e.g. `true`, to always keep and compress raw csv files when running *csv to database* job
 
 ## Data files
 
