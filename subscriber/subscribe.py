@@ -37,7 +37,7 @@ def main():
     parser.add_argument('--host', help='MQTT host address')
     parser.add_argument('--port', help='MQTT port', type=int)
     parser.add_argument('--topic', help='MQTT topic, starts with /hfp/v2/...')
-    parser.add_argument('--fields', help='Topic fields to include in result, separated by whitespace')
+    parser.add_argument('--fields', help='Topic fields to include in result, separated by comma')
     parser.add_argument('--clientid', help='MQTT client id to use instead of a random id')
     parser.add_argument('--duration', help='Duration of subscription in seconds', type=int)
     parser.add_argument('--loglvl', help='Logging level: debug, info, warning, or error')
@@ -54,7 +54,7 @@ def main():
     STARTTIME = datetime.utcnow()
 
     if FIELDS:
-        FIELDS = FIELDS.split(' ')
+        FIELDS = [el.strip() for el in FIELDS.split(',')]
     else:
         FIELDS = TOPIC_FIELDS
 
