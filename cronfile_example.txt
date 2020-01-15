@@ -1,0 +1,20 @@
+# Example of regular subscribe.py jobs
+# Installation: crontab cronfile_example.txt
+# Required:
+# 0) script path
+# 1) HFP topic
+# 2) space-separated HFP payload fields for csv output
+# 3) duration in seconds
+# NOTE: env var HFPV2_ROOTDIR must be set correctly!
+#
+# * * * * * command
+# │ │ │ │ └─ day of week 0-6 (0=Sunday)
+# │ │ │ └─ month 1-12
+# │ │ └─ day of month 1-31
+# │ └─ hour 0-23
+# └─ minute 0-59, quarter hours as */15 for example
+#
+# TODO change minutes to */15 below:
+* * * * * bash $HFPV2_ROOTDIR/launch_subscriptions.sh
+# TODO change to once-a-night below:
+TODO */5 * * * * bash $HFPV2_ROOTDIR/batch_csv_to_db.sh
