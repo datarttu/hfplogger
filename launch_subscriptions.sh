@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # Batch launch subscribe.py jobs in background.
 set -o errexit
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd "${HFPV2_ROOTDIR:-DIR}""/subscriber"
+if [[ -z "$HFPV2_ROOTDIR" ]]; then
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+else
+  DIR="$HFPV2_ROOTDIR""/subscriber"
+fi
+cd "$DIR"
 source env/bin/activate
 # The following loop reads one line at a time from subscriber/jobs.txt
 # and launches a subscription process for each line.
