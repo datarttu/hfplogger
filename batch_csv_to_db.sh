@@ -28,17 +28,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DD="${HFPV2_ROOTDIR:-DIR}/subscriber/data"
 LOG_FILE="$DD/logs/csv_to_db_$(date +%Y%m%d).log"
 touch "$LOG_FILE"
-exec 1>>$LOG_FILE
+exec 1>>"$LOG_FILE"
 exec 2>&1
 
-echo "Start $0 at $(date +'%Y-%m-%d %H:%M:%S%:z')"
+echo "Start ""$0"" at $(date +'%Y-%m-%d %H:%M:%S%:z')"
 
 # If this env var has any value, csv files will be kept
 # and compressed once copied to database.
 # TODO !!!!! change -z to -n to invert if clause -> default to no gzs
 if [[ -z "$HFPV2_CSV_KEEP_GZ" ]]; then
   CSV_KEEP=1
-  mkdir -p "$DD/gz"
+  mkdir -p "$DD""/gz"
   echo "CSV files will be COMPRESSED AND DELETED once copied to database."
 else
   CSV_KEEP=0
@@ -49,13 +49,13 @@ fi
 # thus directing to the "echo $fn" part.
 # Running fuser for every file and using temp file to list the csv files
 # to handle is not optimal but it works for now.
-find $DD/raw -name '*.csv' -type f | while read fn ; do fuser -s $fn || echo "$fn" ; done > "$tempfile"
+find "$DD""/raw" -name '*.csv' -type f | while read fn ; do fuser -s "$fn" || echo "$fn" ; done > "$tempfile"
 
 while read csvpath; do
-  if [[ $CSV_KEEP = 1 ]]; then
+  if [[ "$CSV_KEEP" = 1 ]]; then
     gz_target=`basename $csvpath`
-    echo "$DD/gz/$gz_target.gz compressed"
-    gzip -c "$csvpath" > "$DD/gz/$gz_target.gz"
+    echo "$DD""/gz/""$gz_target"".gz compressed"
+    gzip -c "$csvpath" > "$DD""/gz/""$gz_target.gz"
   fi
   rm "$csvpath"
   # TODO: mapping between raw data files and SQL COPY script for each type of data???
@@ -70,5 +70,5 @@ while read csvpath; do
   #         - delete the csv file
 done<"$tempfile"
 
-echo "End $0 at $(date +'%Y-%m-%d %H:%M:%S%:z')"
+echo "End ""$0"" at $(date +'%Y-%m-%d %H:%M:%S%:z')"
 exit 0
