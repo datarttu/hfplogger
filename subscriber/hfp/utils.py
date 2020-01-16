@@ -60,9 +60,7 @@ def autoname_path(directory, template, timestamp=None):
     Time components in ``template``, e.g. ``%Y%m%d-%H%M``,
     use given ``timestamp`` (default: current time).
     """
-    if not os.path.exists(directory):
-        logging.debug(f'{directory} does not exist, creating')
-        os.makedirs(directory)
+    os.makedirs(directory, exist_ok=True)
     timestamp = timestamp or datetime.utcnow()
     fname = timestamp.strftime(template)
     return os.path.join(directory, fname)
