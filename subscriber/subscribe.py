@@ -33,6 +33,9 @@ def on_message(client, userdata, msg):
 def main():
     # Arguments are prioritized as follows:
     # 1) CL arguments 2) env variables 3) default values.
+    descr = ('Subscribe to an HFP topic.\n'
+             'Results and logs are saved relative to hfplogger/data/,\n',
+             'or [HFPV2_ROOTDIR]/data/ if set.')
     parser = argparse.ArgumentParser(description='Subscribe to an HFP topic.')
     parser.add_argument('--host', help='MQTT host address')
     parser.add_argument('--port', help='MQTT port', type=int)
@@ -50,6 +53,9 @@ def main():
     CLIENTID = ar.clientid or os.getenv('CLIENTID', random_clientid())
     DURATION = ar.duration or int(os.getenv('DURATION', 5))
     LOGLVL   = get_loglevel(ar.loglvl or os.getenv('LOGLVL', 'INFO'))
+    # NOTE: Assuming this py script is located in hfplogger/subscriber/,
+    #       so ".." points to hfplogger/.
+    ROOTDIR  = os.getenv('HFPV2_ROOTDIR', '..')
 
     STARTTIME = datetime.utcnow()
 
@@ -59,7 +65,7 @@ def main():
         FIELDS = TOPIC_FIELDS
 
     prefix = prefix_by_topic(TOPIC)
-    logpath = autoname_path(directory='data/logs',
+    logpath = autoname_path(directory=os.path.join(ROOTDIR, 'data', 'logs'),
                             template=f'{prefix}_%Y%m%d.log',
                             timestamp=STARTTIME)
     logging.basicConfig(filename=logpath, level=LOGLVL)
@@ -72,7 +78,7 @@ def main():
                    f'DURATION={DURATION} '
                    f'LOGLVL={LOGLVL}'))
 
-    respath = autoname_path(directory='data/raw',
+    respath = autoname_path(directory=os.path.join(ROOTDIR, 'data', 'raw'),
                             template=f'{prefix}_%Y%m%dT%H%M%SZ.csv',
                             timestamp=STARTTIME)
 
