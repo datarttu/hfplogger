@@ -14,10 +14,12 @@ if [[ -z "$HFPV2_ROOTDIR" ]]; then
   exit 1
 fi
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # Redirect all output to log file with today date.
 # This will fail and exit the script
 # if the file path is not valid.
-DD="$HFPV2_ROOTDIR/subscriber/data"
+DD="${HFPV2_ROOTDIR:-DIR}/subscriber/data"
 LOG_FILE="$DD/logs/csv_to_db_$(date +%Y%m%d).log"
 touch "$LOG_FILE"
 exec 1>>$LOG_FILE
