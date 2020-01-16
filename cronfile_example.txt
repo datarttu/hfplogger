@@ -15,6 +15,6 @@
 # └─ minute 0-59, quarter hours as */15 for example
 #
 # TODO change minutes to */15 below:
-* * * * * bash "${HFPV2_ROOTDIR:-"/home/$( whoami )/hfplogger"}""/launch_subscriptions.sh"
+* * * * * bash "${HFPV2_ROOTDIR:-"/home/$( whoami )/hfplogger"}""/subscriber/launch_subscriptions.sh"
 # TODO change to once-a-night below:
 TODO */5 * * * * bash "${HFPV2_ROOTDIR:-"/home/$( whoami )/hfplogger"}""/batch_csv_to_db.sh"
