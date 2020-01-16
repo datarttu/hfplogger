@@ -45,39 +45,37 @@ $
 
 To install the database, see the [db-server](db-server) README.
 
-### Recording data
+### Regular recording and handling of data
 
-**TODO:** set HFPV2_ROOTDIR, crontab installation, jobs.txt
+Determine what data you want to subscribe to, in `subscriptions.txt`.
+Give the topic, fields you want to save, and duration of one subscription in seconds, separated by `;`.
 
-- *[db-server](db-server)* is a PostgreSQL database with [TimescaleDB](https://docs.timescale.com/latest/main) extension for storing certain aspects of the HFP data, such as vehicle position events, or traffic light priority events.
-Install PostgreSQL and TimescaleDB on the server and run SQL scripts in [db-server/init](db-server/init), or run the db-server in Docker.
-  - **TODO:** DB schemata covering all types of HFP events.
-  Currently, only some of them are supported.
-- *[subscriber](subscriber)*: `subscribe.py` subscribes to an HFP topic `--topic` for a given amount `--duration` of seconds and saves the data of given payload fields to a csv file.
-Run this preferably as a cronjob, and give a few more seconds than the job interval is, so you get overlapping rather than missing data.
-Run `python subscribe.py --help` for more details.
-  - **TODO:** check / remove docker stuff, test and document running from crontab
-- **TODO:** *csv to database* routine takes all the csv files in `data/raw/` that are not opened by the subscription process, copies their contents into the database, and either compresses the raw csv files to `data/gz/` or simply deletes them.
-Results, such as number of lines read vs. copied to database per raw file, are reported into `data/logs/csv_to_db_[%Y%m%d].log` (one log file per day), and sent to Slack.
-Run this e.g. once a day.
-The database schema must comply with the structure of the csv data collected, of course.
-- **TODO:** *prune files* deletes files older than `$1` days (by modification time) from directory `$2`, reports the deleted files to `data/logs/prune_files_[%Y%m%d].log` (one log file per day), and sends the number of files deleted to Slack.
-Size of the directory on disk is reported too, before and after the deletions.
-Run this once a day for each directory you want.
-- **TODO:** *drop db chunks* removes database Timescale "chunks" (partitions) for timestamps older than `$1` days.
-Table sizes on disk are reported as well, before and after dropping the chunks.
-- **TODO:** system and network load monitoring
+Then modify the `cronfile_example.txt` to your needs.
 
-## Parameters / environment variables
+**IMPORTANT:** match the duration with the time step you are going to use in the cron job, and add some seconds to it to account for the overhead time when the subscription starts - this way your result files will have overlapping data rather than gaps between the files.
+For example, if you want to subscribe every 15 minutes, define it as `*/15` in the cron job and `903` in `subscriptions.txt`.
 
-Must be globally available for the user running the above processes:
+To get the regular jobs up and running, install a new crontab to your user (**WARNING:** this will override any existing crontab):
 
-- `HFPV2_PGPORT`, `HFPV2_PGUSER`, `HFPV2_PGDB`: parameters for Postgres connection
-- `HFPV2_PGPASSWORD`: Postgres password of the above user, used as `PGPASSWORD` for `psql`
-- **TODO:** OR just configure the user's `.pgpass`?
-- `HFPV2_ROOTDIR`: full path of the `hfplogger` project directory.
-`data/` as well as script locations are relative to this.
-- `HFPV2_CSV_KEEP_GZ`: set this to any value, e.g. `true`, to always keep and compress raw csv files when running *csv to database* job
+```
+$ crontab crontab_example.txt # (or something else if you renamed the file)
+# Check that you have the jobs installed:
+$ crontab -l
+```
+
+To remove the cron jobs, run:
+
+```
+$ crontab -r
+```
+
+## Parameters and environment variables
+
+- Database connection parameters: see [db-server](db-server)
+- `HFPV2_ROOTDIR`: Set this to an absolute path if you wish to have `data/` somewhere else than this `hfplogger` directory.
+- `HFPV2_CSV_KEEP_GZ`: set this to any non-empty value, e.g. `true` if you wish to keep compressed version of csv files once they are transferred to the database, rather than deleting them.
+
+Note that environment variables must be globally available to the cron jobs, for example, not only in your current shell session.
 
 ## Data files
 
@@ -108,3 +106,16 @@ data
 ```
 
 Files that are opened by a running process, e.g. log and csv files by `subscribe.py`, can be detected by `lsof -a -c python +D data/` (if run from within the project root).
+
+## TODO stuff
+
+- **TODO:** *csv to database* routine takes all the csv files in `data/raw/` that are not opened by the subscription process, copies their contents into the database, and either compresses the raw csv files to `data/gz/` or simply deletes them.
+Results, such as number of lines read vs. copied to database per raw file, are reported into `data/logs/csv_to_db_[%Y%m%d].log` (one log file per day), and sent to Slack.
+Run this e.g. once a day.
+The database schema must comply with the structure of the csv data collected, of course.
+- **TODO:** *prune files* deletes files older than `$1` days (by modification time) from directory `$2`, reports the deleted files to `data/logs/prune_files_[%Y%m%d].log` (one log file per day), and sends the number of files deleted to Slack.
+Size of the directory on disk is reported too, before and after the deletions.
+Run this once a day for each directory you want.
+- **TODO:** *drop db chunks* removes database Timescale "chunks" (partitions) for timestamps older than `$1` days.
+Table sizes on disk are reported as well, before and after dropping the chunks.
+- **TODO:** system and network load monitoring
