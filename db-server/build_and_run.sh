@@ -1,4 +1,5 @@
 #!/bin/bash
+# CAUTION: OLD VERSION
 # Build and start database container,
 # and test psql connection.
 # NOTE:
