@@ -11,15 +11,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Setting the project root is obligatory,
-# since this script might be executed from within a directory other
-# than where the script is.
-if [[ -z "$HFPV2_ROOTDIR" ]]; then
-  echo "ERROR:"
-  echo "env var HFPV2_ROOTDIR is not set!"
-  exit 1
-fi
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Redirect all output to log file with today date.
