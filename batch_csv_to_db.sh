@@ -3,7 +3,13 @@
 # Batch copy HFP v2 csv files to Postgres db.
 
 # Exit on any error.
-set -o errexit
+# Clean up temp file(s) whenever exiting.
+set -e
+tempfile="$(mktemp -t csvtargets)"
+cleanup() {
+    rm -f "$tempfile"
+}
+trap cleanup EXIT
 
 # Setting the project root is obligatory,
 # since this script might be executed from within a directory other
@@ -43,7 +49,7 @@ fi
 # thus directing to the "echo $fn" part.
 # Running fuser for every file and using temp file to list the csv files
 # to handle is not optimal but it works for now.
-find $DD/raw -name '*.csv' -type f | while read fn ; do fuser -s $fn || echo "$fn" ; done > /tmp/targets.tmp
+find $DD/raw -name '*.csv' -type f | while read fn ; do fuser -s $fn || echo "$fn" ; done > "$tempfile"
 
 while read csvpath; do
   if [[ $CSV_KEEP = 1 ]]; then
@@ -62,8 +68,7 @@ while read csvpath; do
   #         - gzip the csv file to data/gz/
   #         - record error/warning to log
   #         - delete the csv file
-done</tmp/targets.tmp
-rm /tmp/targets.tmp
+done<"$tempfile"
 
 echo "End $0 at $(date +'%Y-%m-%d %H:%M:%S%:z')"
 exit 0
