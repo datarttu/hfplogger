@@ -6,6 +6,47 @@ This is a tool for recording HFP v2 feed for later use.
 
 ## Usage
 
+The tool should work on Debian-based Linux and has been tested on Ubuntu 18.04 LTS.
+
+### Installation
+
+Install from GitHub:
+
+```
+$ git clone https://github.com/datarttu/hfplogger.git && cd hfplogger
+# From now on, assume you're inside hfplogger/ directory.
+```
+
+Ensure you have at least Python 3.7:
+
+```
+$ python --version
+Python 3.7.1 # Or higher
+```
+
+Python scripts will use a virtual environment that makes them independent on the packages installed in your host machine.
+Install it in the subscription script directory:
+
+```
+$ cd subscriber
+$ python -m venv env
+```
+
+A directory `env` containing the environment stuff is created.
+Activate the environment (you will see `(env)` in the beginning of the command line now), and install dependencies in it:
+
+```
+$ source env/bin/activate
+$ (env) pip install -r requirements.txt
+# To exit the environment, run:
+$ (env) deactivate
+$
+```
+
+To install the database, see the [db-server](db-server) README.
+
+### Recording data
+
 **TODO:** set HFPV2_ROOTDIR, crontab installation, jobs.txt
 
 - *[db-server](db-server)* is a PostgreSQL database with [TimescaleDB](https://docs.timescale.com/latest/main) extension for storing certain aspects of the HFP data, such as vehicle position events, or traffic light priority events.
