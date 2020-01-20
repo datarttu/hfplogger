@@ -73,7 +73,7 @@ $ crontab -r
 
 - Database connection parameters: see [db-server](db-server)
 - `HFPV2_ROOTDIR`: Set this to an absolute path if you wish to have `data/` somewhere else than this `hfplogger` directory.
-- `HFPV2_CSV_KEEP_GZ`: set this to any non-empty value, e.g. `true` if you wish to keep compressed version of csv files once they are transferred to the database, rather than deleting them.
+- `HFPV2_NO_GZ`: set this to any non-empty value, e.g. `true` if you wish NOT to keep compressed versions of csv files.
 
 Note that environment variables must be globally available to the cron jobs, for example, not only in your current shell session.
 

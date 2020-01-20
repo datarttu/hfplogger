@@ -28,16 +28,17 @@ exec 2>&1
 
 log "Start $0"
 
-# If this env var has any value, csv files will be kept
-# and compressed once copied to database.
-# TODO !!!!! change -z to -n to invert if clause -> default to no gzs
-if [[ -z "$HFPV2_CSV_KEEP_GZ" ]]; then
+# By default, compressed csv files are preserved no matter
+# if they are successfully imported to the database or not.
+# Preserving can be avoided by setting any non-empty value to
+# the env variable HFPV2_NO_GZ.
+if [[ -n "$HFPV2_NO_GZ" ]]; then
+  CSV_KEEP=0
+  log "CSV files will be DELETED once copied to database."
+else
   CSV_KEEP=1
   mkdir -p "$DD""/gz"
   log "CSV files will be COMPRESSED AND DELETED once copied to database."
-else
-  CSV_KEEP=0
-  log "CSV files will be DELETED once copied to database."
 fi
 
 # fuser returns empty string for files that are NOT opened by any process,
