@@ -1,5 +1,4 @@
 #!/bin/bash
-# CAUTION: OLD VERSION
 # Build and start database container,
 # and test psql connection.
 # NOTE:
@@ -9,7 +8,7 @@
 export PGPASSWORD=postgres
 export PGHOSTPORT=5431
 docker build -t hfp-db . && \
-docker run --rm -d -v "$(pwd)/../data/db:/var/lib/postgresql/data" \
+docker run --rm -d -v "$(pwd)/volume/db:/var/lib/postgresql/data" \
   --name hfp-db \
   -e POSTGRES_PASSWORD="$PGPASSWORD" -p 127.0.0.1:$PGHOSTPORT:5432 hfp-db
 sleep 5
