@@ -5,7 +5,7 @@
 # Exit on any error.
 # Clean up temp file(s) whenever exiting.
 set -e
-tempfile="$(mktemp -t csvtargets)"
+tempfile="$(mktemp -t csvtargets.XXX)"
 cleanup() {
     rm -f "$tempfile"
 }
