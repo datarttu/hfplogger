@@ -11,6 +11,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
+log() {
+  echo "[$(date +'%Y-%m-%d %H:%M:%S%:z')] $1"
+}
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Redirect all output to log file with today date.
@@ -22,7 +26,7 @@ touch "$LOG_FILE"
 exec 1>>"$LOG_FILE"
 exec 2>&1
 
-echo "Start ""$0"" at $(date +'%Y-%m-%d %H:%M:%S%:z')"
+log "Start $0"
 
 # If this env var has any value, csv files will be kept
 # and compressed once copied to database.
@@ -30,10 +34,10 @@ echo "Start ""$0"" at $(date +'%Y-%m-%d %H:%M:%S%:z')"
 if [[ -z "$HFPV2_CSV_KEEP_GZ" ]]; then
   CSV_KEEP=1
   mkdir -p "$DD""/gz"
-  echo "CSV files will be COMPRESSED AND DELETED once copied to database."
+  log "CSV files will be COMPRESSED AND DELETED once copied to database."
 else
   CSV_KEEP=0
-  echo "CSV files will be DELETED once copied to database."
+  log "CSV files will be DELETED once copied to database."
 fi
 
 # fuser returns empty string for files that are NOT opened by any process,
@@ -45,7 +49,7 @@ find "$DD""/raw" -name '*.csv' -type f | while read fn ; do fuser -s "$fn" || ec
 while read csvpath; do
   if [[ "$CSV_KEEP" = 1 ]]; then
     gz_target=`basename $csvpath`
-    echo "$DD""/gz/""$gz_target"".gz compressed"
+    log "Compressed: ""$DD""/gz/""$gz_target"".gz"
     gzip -c "$csvpath" > "$DD""/gz/""$gz_target.gz"
   fi
   rm "$csvpath"
@@ -61,5 +65,5 @@ while read csvpath; do
   #         - delete the csv file
 done<"$tempfile"
 
-echo "End ""$0"" at $(date +'%Y-%m-%d %H:%M:%S%:z')"
+log "End $0"
 exit 0
