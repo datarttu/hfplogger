@@ -52,17 +52,7 @@ while read csvpath; do
     log "Compressed: ""$DD""/gz/""$gz_target"".gz"
     gzip -c "$csvpath" > "$DD""/gz/""$gz_target.gz"
   fi
-  rm "$csvpath"
-  # TODO: mapping between raw data files and SQL COPY script for each type of data???
-  # TODO: for each file for which there is a mapping, do
-  #       - psql: copy contents to temp table, insert valid rows from temp table to prod table, echo results
-  #       - if psql exit status was successful:
-  #         - if keep_and_compress==true, gzip the csv file to data/gz/
-  #         - delete the csv file
-  #       - else (if psql failed):
-  #         - gzip the csv file to data/gz/
-  #         - record error/warning to log
-  #         - delete the csv file
+  "$DIR""/csv_to_db.sh" "$csvpath" && rm "$csvpath" || continue
 done<"$tempfile"
 
 log "End $0"
