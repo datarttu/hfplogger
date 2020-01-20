@@ -2,8 +2,8 @@ CREATE DATABASE hfp;
 \c hfp;
 
 CREATE TYPE event_type AS enum(
-  'vp', 'due', 'arr', 'dep', 'ars', 'pde', 'pas', 'wait', 'doo', 'doc',
-  'tlr', 'tla', 'da', 'dout', 'ba', 'bout', 'vja', 'vjout'
+  'VP', 'DUE', 'ARR', 'DEP', 'ARS', 'PDE', 'PAS', 'WAIT', 'DOO', 'DOC',
+  'TLR', 'TLA', 'DA', 'DOUT', 'BA', 'BOUT', 'VJA', 'VJOUT'
 );
 /*
 Enum types that are not used yet but might be useful
