@@ -109,10 +109,6 @@ Files that are opened by a running process, e.g. log and csv files by `subscribe
 
 ## TODO stuff
 
-- **TODO:** *csv to database* routine takes all the csv files in `data/raw/` that are not opened by the subscription process, copies their contents into the database, and either compresses the raw csv files to `data/gz/` or simply deletes them.
-Results, such as number of lines read vs. copied to database per raw file, are reported into `data/logs/csv_to_db_[%Y%m%d].log` (one log file per day), and sent to Slack.
-Run this e.g. once a day.
-The database schema must comply with the structure of the csv data collected, of course.
 - **TODO:** *prune files* deletes files older than `$1` days (by modification time) from directory `$2`, reports the deleted files to `data/logs/prune_files_[%Y%m%d].log` (one log file per day), and sends the number of files deleted to Slack.
 Size of the directory on disk is reported too, before and after the deletions.
 Run this once a day for each directory you want.
