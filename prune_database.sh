@@ -14,4 +14,4 @@ touch "$LOG_FILE"
 exec 1>>"$LOG_FILE"
 exec 2>&1
 log "Run drop_chunks"
-psql -h localhost -p 5431 -d hfp -U postgres -c "SELECT drop_chunks(interval '7 days');"
+psql -h localhost -p 5432 -d hfp -U postgres -c "SELECT drop_chunks(interval '7 days');"
