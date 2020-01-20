@@ -8,7 +8,7 @@ else
 fi
 cd "$DIR"
 source env/bin/activate
-# The following loop reads one line at a time from subscriber/jobs.txt
+# The following loop reads one line at a time from subscriptions.txt
 # and launches a subscription process for each line.
 # There must be exactly 3 fields: topic, fields and duration,
 # and they must be separated by ";".
@@ -18,4 +18,4 @@ IFS=";"
 while read topic fields duration; do
   [[ "$topic" = \#* ]] || [[ -z "$topic" ]] && continue # Skip commented or empty lines
   python subscribe.py --topic "$topic" --fields "$fields" --duration "$duration" &
-done<../subscriptions.txt
+done<"../subscriptions.txt"
