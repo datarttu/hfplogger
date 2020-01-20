@@ -183,4 +183,4 @@ LIMIT 1;
   "
 fi
 
-cat "$1" | psql -w -h localhost -p 5431 -d hfp -U postgres -c "$sql"
+cat "$1" | psql -w -h localhost -p 5432 -d hfp -U postgres -c "$sql"
