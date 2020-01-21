@@ -78,6 +78,7 @@ If you want to override default values of environment variables used in scripts,
 - `HFPV2_PORT`: Defaults to 5432, you may want to use some other port e.g. with a db in a container.
 - `HFPV2_ROOTDIR`: Set this to an absolute path if you wish to have `data/` somewhere else than this `hfplogger` directory.
 - `HFPV2_NO_GZ`: set this to any non-empty value, e.g. `true` if you wish NOT to keep compressed versions of csv files.
+- These MUST be set in `.env` to enable Slack reporting: `HFPV2_SLACK_WEBHOOK_URL`, `HFPV2_SLACK_CHANNEL`, `HFPV2_SLACK_NAME`
 
 Note that environment variables must be globally available to the cron jobs, for example, not only in your current shell session.
 
