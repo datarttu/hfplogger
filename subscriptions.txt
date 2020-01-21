@@ -1,9 +1,9 @@
 # All messages from TRAMS, with ALL fields (tl stuff will be separated when importing to database)
-/hfp/v2/journey/ongoing/+/tram/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,tlp-requestid,tlp-requesttype,tlp-prioritylevel,tlp-reason,tlp-att-seq,tlp-decision,sid,signal-groupid,tlp-signalgroupnbr,type;3
+/hfp/v2/journey/ongoing/+/tram/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,tlp-requestid,tlp-requesttype,tlp-prioritylevel,tlp-reason,tlp-att-seq,tlp-decision,sid,signal-groupid,tlp-signalgroupnbr,type;903
 
 # Same here except for buses
-/hfp/v2/journey/ongoing/+/bus/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,tlp-requestid,tlp-requesttype,tlp-prioritylevel,tlp-reason,tlp-att-seq,tlp-decision,sid,signal-groupid,tlp-signalgroupnbr,type;3
+/hfp/v2/journey/ongoing/+/bus/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,tlp-requestid,tlp-requesttype,tlp-prioritylevel,tlp-reason,tlp-att-seq,tlp-decision,sid,signal-groupid,tlp-signalgroupnbr,type;903
 
 # Metro and train do not have traffic light priority content, so we consider all fields except tl ones
-/hfp/v2/journey/ongoing/+/metro/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,type;3
-/hfp/v2/journey/ongoing/+/train/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,type;3
+/hfp/v2/journey/ongoing/+/metro/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,type;903
+/hfp/v2/journey/ongoing/+/train/#;desi,dir,oper,veh,tst,tsi,spd,hdg,lat,long,acc,dl,odo,drst,oday,jrn,line,start,loc,stop,route,occu,seq,ttarr,ttdep,type;903
