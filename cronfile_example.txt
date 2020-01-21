@@ -6,6 +6,7 @@
 # 2) space-separated HFP payload fields for csv output
 # 3) duration in seconds
 # NOTE: env var HFPV2_ROOTDIR must be set correctly!
+# Alternatively, use absolute paths.
 #
 # * * * * * command
 # │ │ │ │ └─ day of week 0-6 (0=Sunday)
@@ -14,6 +15,6 @@
 # │ └─ hour 0-23
 # └─ minute 0-59, quarter hours as */15 for example
 #
-*/15 * * * * bash "${HFPV2_ROOTDIR:-"/home/$( whoami )/hfplogger"}""/subscriber/launch_subscriptions.sh"
-0 3 * * * bash "${HFPV2_ROOTDIR:-"/home/$( whoami )/hfplogger"}""/batch_csv_to_db.sh"
-0 4 * * * bash "${HFPV2_ROOTDIR:-"/home/$( whoami )/hfplogger"}""/prune_database.sh"
+*/15 * * * * bash "$HFPV2_ROOTDIR""subscriber/launch_subscriptions.sh"
+0 3 * * * bash "$HFPV2_ROOTDIR""/batch_csv_to_db.sh"
+0 4 * * * bash "$HFPV2_ROOTDIR""/prune_database.sh"
