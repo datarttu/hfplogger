@@ -80,7 +80,11 @@ def main():
     logpath = autoname_path(directory=os.path.join(ROOTDIR, 'data', 'logs'),
                             template=f'{prefix}_%Y%m%d.log',
                             timestamp=STARTTIME)
-    logging.basicConfig(filename=logpath, level=LOGLVL)
+    logformat = '[%(asctime)s]:%(levelname)s:%(filename)s:%(lineno)d: %(message)s'
+    logging.basicConfig(filename=logpath,
+                        level=LOGLVL,
+                        format=logformat,
+                        datefmt='%Y-%m-%d %H:%M:%S%z')
     logging.getLogger().addHandler(logging.StreamHandler())
     logging.info((f'HOST={HOST} '
                    f'PORT={PORT} '
