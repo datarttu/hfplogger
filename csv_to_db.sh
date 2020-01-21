@@ -38,7 +38,7 @@ columns_def="
 desi            text,
 dir             smallint,
 oper            smallint,
-veh             smallint,
+veh             integer,
 tst             timestamptz,
 tsi             integer,
 spd             real,
