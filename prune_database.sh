@@ -5,6 +5,7 @@
 # Database connection params must be available in user's
 # ~/.pgpass.
 envpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/.env"
+source "$envpath"
 
 # We post every log entry to Slack here since this script is run ~ once a day.
 log() {
