@@ -6,9 +6,13 @@
 # ~/.pgpass.
 envpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/.env"
 [[ -f "$envpath" ]] && source "$envpath"
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/slacklog.sh" || echo "Warning: slacklog.sh not found"
 
+# We post every log entry to Slack here since this script is run ~ once a day.
 log() {
-  echo "[$(date +'%Y-%m-%d %H:%M:%S%:z')] $1"
+  logentry="[$(date +'%Y-%m-%d %H:%M:%S%:z')] $1"
+  echo "$logentry"
+  [[ `type -t slacklog`"" == 'function' ]] && slacklog "$logentry"
 }
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DD="${HFPV2_ROOTDIR:-DIR}/data"
