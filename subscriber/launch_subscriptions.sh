@@ -21,5 +21,5 @@ source env/bin/activate
 IFS=";"
 while read topic fields duration; do
   [[ "$topic" = \#* ]] || [[ -z "$topic" ]] && continue # Skip commented or empty lines
-  python subscribe.py --topic "$topic" --fields "$fields" --duration "$duration" &
+  python3 subscribe.py --topic "$topic" --fields "$fields" --duration "$duration" &
 done<"../subscriptions.txt"
