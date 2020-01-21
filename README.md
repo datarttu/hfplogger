@@ -71,7 +71,11 @@ $ crontab -r
 
 ## Parameters and environment variables
 
+If you want to override default values of environment variables used in scripts, make a file called `.env` in the hfplogger folder, and write the variables there in format `ENV_VAR='VALUE'` separated by newline.
+`.env` is sourced in the beginning of each shell script.
+
 - Database connection parameters: see [db-server](db-server)
+- `HFPV2_PORT`: Defaults to 5432, you may want to use some other port e.g. with a db in a container.
 - `HFPV2_ROOTDIR`: Set this to an absolute path if you wish to have `data/` somewhere else than this `hfplogger` directory.
 - `HFPV2_NO_GZ`: set this to any non-empty value, e.g. `true` if you wish NOT to keep compressed versions of csv files.
 
