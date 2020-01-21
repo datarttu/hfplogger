@@ -39,7 +39,7 @@ CREATE TABLE bus (
   desi            text,
   dir             smallint,
   oper            smallint          NOT NULL,
-  veh             smallint          NOT NULL,
+  veh             integer           NOT NULL,
   tst             timestamptz       NOT NULL,
   tsi             integer,
   spd             real,
