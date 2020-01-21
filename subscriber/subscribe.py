@@ -37,22 +37,34 @@ def main():
              'Results and logs are saved relative to hfplogger/data/,\n',
              'or [HFPV2_ROOTDIR]/data/ if set.')
     parser = argparse.ArgumentParser(description='Subscribe to an HFP topic.')
-    parser.add_argument('--host', help='MQTT host address')
-    parser.add_argument('--port', help='MQTT port', type=int)
-    parser.add_argument('--topic', help='MQTT topic, starts with /hfp/v2/...')
-    parser.add_argument('--fields', help='Topic fields to include in result, separated by comma')
-    parser.add_argument('--clientid', help='MQTT client id to use instead of a random id')
-    parser.add_argument('--duration', help='Duration of subscription in seconds', type=int)
-    parser.add_argument('--loglvl', help='Logging level: debug, info, warning, or error')
+    parser.add_argument('--host', help='MQTT host address', default='mqtt.hsl.fi')
+    parser.add_argument('--port', help='MQTT port', type=int, default=1883)
+    parser.add_argument('--topic',
+                        help='MQTT topic, starts with /hfp/v2/...',
+                        required=True)
+    parser.add_argument('--fields',
+                        help='Topic fields to include in result, separated by comma')
+    parser.add_argument('--clientid',
+                        help='MQTT client id to use instead of a random id',
+                        type=str,
+                        default=random_clientid())
+    parser.add_argument('--duration',
+                        help='Duration of subscription in seconds',
+                        type=int,
+                        default=5)
+    parser.add_argument('--loglvl',
+                        help='Logging level: debug, info, warning, or error',
+                        type=str,
+                        default='info')
     ar = parser.parse_args()
 
-    HOST     = ar.host or os.getenv('HOST', 'mqtt.hsl.fi')
-    PORT     = ar.port or int(os.getenv('PORT', 1883))
-    TOPIC    = ar.topic or os.getenv('TOPIC')
-    FIELDS   = ar.fields or os.getenv('FIELDS')
-    CLIENTID = ar.clientid or os.getenv('CLIENTID', random_clientid())
-    DURATION = ar.duration or int(os.getenv('DURATION', 5))
-    LOGLVL   = get_loglevel(ar.loglvl or os.getenv('LOGLVL', 'INFO'))
+    HOST     = ar.host
+    PORT     = ar.port
+    TOPIC    = ar.topic
+    FIELDS   = ar.fields
+    CLIENTID = ar.clientid
+    DURATION = ar.duration
+    LOGLVL   = get_loglevel(ar.loglvl)
     # NOTE: Assuming this py script is located in hfplogger/subscriber/,
     #       so ".." points to hfplogger/.
     ROOTDIR  = os.getenv('HFPV2_ROOTDIR', '..')
