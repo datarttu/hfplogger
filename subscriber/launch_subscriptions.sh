@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Batch launch subscribe.py jobs in background.
 set -o errexit
+
+envpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/../.env"
+[[ -f "$envpath" ]] && source "$envpath"
+
 if [[ -z "$HFPV2_ROOTDIR" ]]; then
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 else

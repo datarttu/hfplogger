@@ -4,6 +4,9 @@
 # This applies to ALL tables having a hypertable definition.
 # Database connection params must be available in user's
 # ~/.pgpass.
+envpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/.env"
+[[ -f "$envpath" ]] && source "$envpath"
+
 log() {
   echo "[$(date +'%Y-%m-%d %H:%M:%S%:z')] $1"
 }

@@ -3,8 +3,12 @@
 # Batch copy HFP v2 csv files to Postgres db.
 
 # Exit on any error.
-# Clean up temp file(s) whenever exiting.
 set -e
+
+envpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/.env"
+[[ -f "$envpath" ]] && source "$envpath"
+
+# Clean up temp file(s) whenever exiting.
 tempfile="$(mktemp -t csvtargets.XXX)"
 cleanup() {
     rm -f "$tempfile"

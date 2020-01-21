@@ -11,6 +11,10 @@
 #    Must contain transit mode bus, tram, train or metro, e.g. '_metro_'.
 #    For bus and tram, traffic light events are imported to separate tables.
 set -e
+
+envpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )""/.env"
+[[ -f "$envpath" ]] && source "$envpath"
+
 if [[ -z "$1" ]]; then
   exit 1 "No csv path provided"
 fi
@@ -183,4 +187,4 @@ LIMIT 1;
   "
 fi
 
-cat "$1" | psql -w -h localhost -p 5432 -d hfp -U postgres -c "$sql"
+cat "$1" | psql -w -h localhost -p "${HFPV2_PORT:-5432}" -d hfp -U postgres -c "$sql"
