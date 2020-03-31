@@ -19,7 +19,7 @@ TOPIC_FIELDS = ['desi', 'dir', 'oper', 'veh', 'tst', 'tsi', 'spd', 'hdg',
                 'tlp-prioritylevel', 'tlp-reason', 'tlp-att-seq', 'tlp-decision',
                 'sid', 'signal-groupid', 'tlp-signalgroupnbr', 'tlp-line-configid',
                 'tlp-point-configid', 'tlp-frequency', 'tlp-protocol',
-                'type']
+                'type', 'received']
 
 def get_loglevel(level_str):
     """
@@ -71,3 +71,9 @@ def random_clientid(length=10):
     """
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for i in range(length))
+
+def isonow_str():
+    """
+    Current timestamp in UTC with "Z".
+    """
+    return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'

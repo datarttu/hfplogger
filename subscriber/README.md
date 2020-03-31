@@ -32,3 +32,8 @@ docker run --rm -it -v "$(pwd)/data:/usr/src/app/data" \
   -e LOGLVL="debug" \
   hfp-subscriber
 ```
+
+## "received" field
+
+Note that `received` is automatically added as the last field to every subscription, in case it is not already in the field definition.
+This field tells the timestamp the message was received.
