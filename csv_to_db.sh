@@ -73,11 +73,13 @@ if [[ "$transitmode" == 'bus' || "$transitmode" == 'tram' ]]; then
   sid             integer,
   signal_groupid  integer,
   tlp_signalgroupnbr integer,
-  event_type      event_type
+  event_type      event_type,
+  received        timestamptz
   "
 else
   columns_def="$columns_def"",
-  event_type      event_type
+  event_type      event_type,
+  received        timestamptz
   "
 fi
 
@@ -88,18 +90,19 @@ if [[ "$transitmode" == 'bus' || "$transitmode" == 'tram' ]]; then
     desi, dir, oper, veh, tst, tsi, spd, hdg, lat, long,
     acc, dl, odo, drst, oday, jrn, line, start, loc,
     stop, route, occu, seq, ttarr, ttdep,
-    event_type
+    event_type, received
     ) (
     SELECT desi, dir, oper, veh, tst, tsi, spd, hdg, lat, long,
     acc, dl, odo, drst, oday, jrn, line, start, loc::location_source,
     stop, route, occu, seq, ttarr, ttdep,
-    event_type::event_type
+    event_type::event_type, received
     FROM staging
     WHERE event_type NOT IN ('TLR'::event_type, 'TLA'::event_type)
     AND tst IS NOT NULL
     AND oper IS NOT NULL
     AND veh IS NOT NULL
     AND event_type IS NOT NULL
+    AND received IS NOT NULL
     )
     ON CONFLICT DO NOTHING
     RETURNING *)
@@ -118,20 +121,21 @@ if [[ "$transitmode" == 'bus' || "$transitmode" == 'tram' ]]; then
     stop, route, occu, seq, ttarr, ttdep,
     tlp_requestid, tlp_requesttype, tlp_reason,
     tlp_att_seq, tlp_decision, sid, signal_groupid, tlp_signalgroupnbr,
-    event_type
+    event_type, received
     ) (
     SELECT desi, dir, oper, veh, tst, tsi, spd, hdg, lat, long,
     acc, dl, odo, drst, oday, jrn, line, start, loc::location_source,
     stop, route, occu, seq, ttarr, ttdep,
     tlp_requestid, tlp_requesttype::tlp_requesttype, tlp_reason::tlp_reason,
     tlp_att_seq, tlp_decision::tlp_decision, sid, signal_groupid, tlp_signalgroupnbr,
-    event_type::event_type
+    event_type::event_type, received
     FROM staging
     WHERE event_type IN ('TLR'::event_type, 'TLA'::event_type)
     AND tst IS NOT NULL
     AND oper IS NOT NULL
     AND veh IS NOT NULL
     AND event_type IS NOT NULL
+    AND received IS NOT NULL
     )
     ON CONFLICT DO NOTHING
     RETURNING *)
@@ -151,12 +155,13 @@ else
     SELECT desi, dir, oper, veh, tst, tsi, spd, hdg, lat, long,
     acc, dl, odo, drst, oday, jrn, line, start, loc::location_source,
     stop, route, occu, seq, ttarr, ttdep,
-    event_type::event_type
+    event_type::event_type, received
     FROM staging
     WHERE tst IS NOT NULL
     AND oper IS NOT NULL
     AND veh IS NOT NULL
     AND event_type IS NOT NULL
+    AND received IS NOT NULL
     )
     ON CONFLICT DO NOTHING
     RETURNING *

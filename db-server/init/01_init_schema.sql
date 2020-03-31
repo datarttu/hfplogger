@@ -63,7 +63,8 @@ CREATE TABLE bus (
   ttdep           timestamptz,
   -- dr-type is left out
   event_type      event_type        NOT NULL,
-  PRIMARY KEY (tst, oper, veh, event_type)
+  received        timestamptz       NOT NULL  DEFAULT now(),
+  PRIMARY KEY (tst, oper, veh, event_type, received)
 );
 
 /*
@@ -127,7 +128,8 @@ CREATE TABLE tl_bus (
   -- they seem to be always empty
   -- tlp_frequency and tlp_protocol are left out for now
   event_type      event_type        NOT NULL,
-  PRIMARY KEY (tst, oper, veh, event_type)
+  received        timestamptz       NOT NULL  DEFAULT now(),
+  PRIMARY KEY (tst, oper, veh, event_type, received)
 );
 SELECT create_hypertable('tl_bus',
                          'tst',
@@ -140,7 +142,7 @@ Currently, data is split to tables according to the transit mode;
 the table structure is the same however.
 */
 CREATE TABLE tram AS (SELECT * FROM bus) WITH NO DATA;
-ALTER TABLE tram ADD PRIMARY KEY (tst, oper, veh, event_type);
+ALTER TABLE tram ADD PRIMARY KEY (tst, oper, veh, event_type, received);
 SELECT create_hypertable('tram',
                          'tst',
                          chunk_time_interval => interval '1 hour');
@@ -148,7 +150,7 @@ CREATE INDEX tram_oday_idx ON tram USING brin (oday);
 CREATE INDEX tram_route_dir_idx ON tram (route, dir);
 
 CREATE TABLE tl_tram AS (SELECT * FROM tl_bus) WITH NO DATA;
-ALTER TABLE tl_tram ADD PRIMARY KEY (tst, oper, veh, event_type);
+ALTER TABLE tl_tram ADD PRIMARY KEY (tst, oper, veh, event_type, received);
 SELECT create_hypertable('tl_tram',
                          'tst',
                          chunk_time_interval => interval '1 hour');
@@ -156,7 +158,7 @@ CREATE INDEX tl_tram_oday_idx ON tl_tram USING brin (oday);
 CREATE INDEX tl_tram_route_dir_idx ON tl_tram (route, dir);
 
 CREATE TABLE train AS (SELECT * FROM bus) WITH NO DATA;
-ALTER TABLE train ADD PRIMARY KEY (tst, oper, veh, event_type);
+ALTER TABLE train ADD PRIMARY KEY (tst, oper, veh, event_type, received);
 SELECT create_hypertable('train',
                          'tst',
                          chunk_time_interval => interval '1 hour');
@@ -164,7 +166,7 @@ CREATE INDEX train_oday_idx ON train USING brin (oday);
 CREATE INDEX train_route_dir_idx ON train (route, dir);
 
 CREATE TABLE metro AS (SELECT * FROM bus) WITH NO DATA;
-ALTER TABLE metro ADD PRIMARY KEY (tst, oper, veh, event_type);
+ALTER TABLE metro ADD PRIMARY KEY (tst, oper, veh, event_type, received);
 SELECT create_hypertable('metro',
                          'tst',
                          chunk_time_interval => interval '1 hour');

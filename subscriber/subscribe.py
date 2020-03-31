@@ -14,6 +14,7 @@ from hfp.utils import get_loglevel
 from hfp.utils import autoname_path
 from hfp.utils import random_clientid
 from hfp.utils import prefix_by_topic
+from hfp.utils import isonow_str
 from hfp.utils import TOPIC_FIELDS
 from hfp.parse import parse_message
 
@@ -25,7 +26,9 @@ def on_connect(client, userdata, flags, rc):
     logging.info(f'Connected with result code {rc}')
 
 def on_message(client, userdata, msg):
+    received = isonow_str()
     res = parse_message(msg, include=userdata['include'])
+    res['received'] = received
     userdata['writer'].writerow(res)
     global i
     i += 1
@@ -73,6 +76,9 @@ def main():
 
     if FIELDS:
         FIELDS = [el.strip() for el in FIELDS.split(',')]
+        # Force "received" field if not already there.
+        if 'received' not in FIELDS:
+            FIELDS.append('received')
     else:
         FIELDS = TOPIC_FIELDS
 
