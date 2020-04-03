@@ -100,7 +100,7 @@ if [[ "$transitmode" == 'bus' || "$transitmode" == 'tram' ]]; then
     WHERE event_type NOT IN ('TLR'::event_type, 'TLA'::event_type)
     AND tst IS NOT NULL
     AND oper IS NOT NULL
-    AND veh IS NOT NULL
+    AND veh IS NOT NULL AND veh < 32767
     AND event_type IS NOT NULL
     AND received IS NOT NULL
     )
@@ -133,7 +133,7 @@ if [[ "$transitmode" == 'bus' || "$transitmode" == 'tram' ]]; then
     WHERE event_type IN ('TLR'::event_type, 'TLA'::event_type)
     AND tst IS NOT NULL
     AND oper IS NOT NULL
-    AND veh IS NOT NULL
+    AND veh IS NOT NULL AND veh < 32767
     AND event_type IS NOT NULL
     AND received IS NOT NULL
     )
@@ -159,7 +159,7 @@ else
     FROM staging
     WHERE tst IS NOT NULL
     AND oper IS NOT NULL
-    AND veh IS NOT NULL
+    AND veh IS NOT NULL AND veh < 32767
     AND event_type IS NOT NULL
     AND received IS NOT NULL
     )

@@ -1,5 +1,7 @@
 /*
  * This patch changes the "veh" field from smallint to integer.
+ * NOTE: This does not seem to work with fully populated database
+ *       due to memory / disk space issues.
  *
  * Arttu K 2020-04-03
  */
