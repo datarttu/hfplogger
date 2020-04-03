@@ -15,7 +15,8 @@ VALIDATION = {
     'hdg': [0, 360],
     'line': RNG,
     'occu': [0, 100],
-    'seq': RNG
+    'seq': RNG,
+    'tlp-requestid': RNG
 }
 
 def validate_value(name, allowed, value):
@@ -30,7 +31,10 @@ def validate_value(name, allowed, value):
 
 def validate_record(rec_dict, line_num):
     for field_name, allowed_range in VALIDATION.items():
-        field_value = rec_dict[field_name]
+        try:
+            field_value = rec_dict[field_name]
+        except KeyError:
+            continue
         res = validate_value(field_name, allowed_range, field_value)
         if res:
             print(f'{line_num:10}: {res}')
