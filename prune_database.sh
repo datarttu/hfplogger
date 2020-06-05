@@ -21,3 +21,4 @@ exec 2>&1
 sql="SELECT drop_chunks(interval '7 days');"
 log "prune_database.sh: \`""$sql""\`"
 psql -h localhost -p "${HFPV2_PORT:-5432}" -d hfp -U postgres -c "$sql" || log "Failed to prune database: see ""$LOG_FILE"
+log "Done"
