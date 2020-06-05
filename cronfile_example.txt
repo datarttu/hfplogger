@@ -18,3 +18,4 @@
 */15 * * * * bash "$HFPV2_ROOTDIR""subscriber/launch_subscriptions.sh"
 0 3 * * * bash "$HFPV2_ROOTDIR""/batch_csv_to_db.sh"
 0 4 * * * bash "$HFPV2_ROOTDIR""/prune_database.sh"
+0 5 * * * bash "$HFPV2_ROOTDIR""/vacuum.sh"
