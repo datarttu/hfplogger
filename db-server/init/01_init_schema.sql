@@ -26,6 +26,23 @@ CREATE TABLE insert_log (
   PRIMARY KEY (target, ts)
 );
 
+CREATE FUNCTION geom_setter()
+RETURNS trigger
+LANGUAGE PLPGSQL
+AS
+$$
+BEGIN
+  NEW.geom := ST_Transform(
+    ST_SetSRID(
+      ST_MakePoint(NEW.long, NEW.lat),
+      4326),
+    3067);
+  RETURN NEW;
+END;
+$$;
+COMMENT ON FUNCTION geom_setter() IS
+'Sets the point geometry field value of a row using `long` and `lat` coordinates.';
+
 /*
 The following tables can store values from the event types that are related to
 vehicle position, stop and door events on service journeys:
@@ -61,8 +78,11 @@ CREATE TABLE bus (
   -- dr-type is left out
   event_type      event_type        NOT NULL,
   received        timestamptz       NOT NULL  DEFAULT now(),
+  geom            geometry(POINT, 3067),
   PRIMARY KEY (tst, oper, veh, event_type, received)
 );
+
+CREATE TRIGGER set_geom_field BEFORE INSERT ON bus FOR EACH ROW EXECUTE PROCEDURE geom_setter();
 
 /*
 Timescale hypertable automatically distributes the main table into
@@ -81,6 +101,7 @@ for common queries.
 */
 CREATE INDEX bus_oday_idx ON bus USING brin (oday);
 CREATE INDEX bus_route_dir_idx ON bus (route, dir);
+CREATE INDEX ON bus USING GIST (geom);
 
 /*
 Separate table for traffic light events (bus).
@@ -126,13 +147,16 @@ CREATE TABLE tl_bus (
   -- tlp_frequency and tlp_protocol are left out for now
   event_type      event_type        NOT NULL,
   received        timestamptz       NOT NULL  DEFAULT now(),
+  geom            geometry(POINT, 3067),
   PRIMARY KEY (tst, oper, veh, event_type, received)
 );
+CREATE TRIGGER set_geom_field BEFORE INSERT ON tl_bus FOR EACH ROW EXECUTE PROCEDURE geom_setter();
 SELECT create_hypertable('tl_bus',
                          'tst',
                          chunk_time_interval => interval '1 hour');
 CREATE INDEX tl_bus_oday_idx ON tl_bus USING brin (oday);
 CREATE INDEX tl_bus_route_dir_idx ON tl_bus (route, dir);
+CREATE INDEX ON tl_bus USING GIST (geom);
 
 /*
 Currently, data is split to tables according to the transit mode;
@@ -140,32 +164,40 @@ the table structure is the same however.
 */
 CREATE TABLE tram AS (SELECT * FROM bus) WITH NO DATA;
 ALTER TABLE tram ADD PRIMARY KEY (tst, oper, veh, event_type, received);
+CREATE TRIGGER set_geom_field BEFORE INSERT ON tram FOR EACH ROW EXECUTE PROCEDURE geom_setter();
 SELECT create_hypertable('tram',
                          'tst',
                          chunk_time_interval => interval '1 hour');
 CREATE INDEX tram_oday_idx ON tram USING brin (oday);
 CREATE INDEX tram_route_dir_idx ON tram (route, dir);
+CREATE INDEX ON tram USING GIST (geom);
 
 CREATE TABLE tl_tram AS (SELECT * FROM tl_bus) WITH NO DATA;
 ALTER TABLE tl_tram ADD PRIMARY KEY (tst, oper, veh, event_type, received);
+CREATE TRIGGER set_geom_field BEFORE INSERT ON tl_tram FOR EACH ROW EXECUTE PROCEDURE geom_setter();
 SELECT create_hypertable('tl_tram',
                          'tst',
                          chunk_time_interval => interval '1 hour');
 CREATE INDEX tl_tram_oday_idx ON tl_tram USING brin (oday);
 CREATE INDEX tl_tram_route_dir_idx ON tl_tram (route, dir);
+CREATE INDEX ON tl_tram USING GIST (geom);
 
 CREATE TABLE train AS (SELECT * FROM bus) WITH NO DATA;
 ALTER TABLE train ADD PRIMARY KEY (tst, oper, veh, event_type, received);
+CREATE TRIGGER set_geom_field BEFORE INSERT ON train FOR EACH ROW EXECUTE PROCEDURE geom_setter();
 SELECT create_hypertable('train',
                          'tst',
                          chunk_time_interval => interval '1 hour');
 CREATE INDEX train_oday_idx ON train USING brin (oday);
 CREATE INDEX train_route_dir_idx ON train (route, dir);
+CREATE INDEX ON train USING GIST (geom);
 
 CREATE TABLE metro AS (SELECT * FROM bus) WITH NO DATA;
 ALTER TABLE metro ADD PRIMARY KEY (tst, oper, veh, event_type, received);
+CREATE TRIGGER set_geom_field BEFORE INSERT ON metro FOR EACH ROW EXECUTE PROCEDURE geom_setter();
 SELECT create_hypertable('metro',
                          'tst',
                          chunk_time_interval => interval '1 hour');
 CREATE INDEX metro_oday_idx ON metro USING brin (oday);
 CREATE INDEX metro_route_dir_idx ON metro (route, dir);
+CREATE INDEX ON metro USING GIST (geom);
