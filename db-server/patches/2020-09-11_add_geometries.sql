@@ -6,3 +6,6 @@
  * that makes geometry operations and calculations easier than with WGS84.
  */
 CREATE EXTENSION postgis;
+BEGIN;
+
+CREATE EXTENSION IF NOT EXISTS postgis;
