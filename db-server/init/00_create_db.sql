@@ -1,2 +1,3 @@
 CREATE DATABASE hfp;
 \c hfp;
+CREATE EXTENSION postgis;
